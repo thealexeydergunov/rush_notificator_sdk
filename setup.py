@@ -10,7 +10,7 @@ setup(
     author_email='dergunovalexey2000@gmail.com',
     packages=find_packages('src'),
     package_dir={'': 'src'},
-    url='https://github.com/thealexeydergunov/rush_notificator_sdk.git',
+    url='https://github.com/thealexeydergunov/rush_notificator_sdk',
     keywords='rush_notificator_sdk based on aiohttp',
     install_requires=[
         'aiohttp',
