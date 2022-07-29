@@ -44,7 +44,7 @@ class RushNotificatorSDK:
 
         out = {}
         async with self.aio_session.post(
-                f'http://{self.settings.notification_service_host}:8081/api/v4/mqtt/publish', json=data,
+                f'http://{self.settings.notification_service_host}/api/notifications/send/', json=data,
                 **self.kwgs) as resp:
             if resp.status == 200:
                 out = await resp.json()
