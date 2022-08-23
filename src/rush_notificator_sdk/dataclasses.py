@@ -1,7 +1,7 @@
 from asyncio import Queue
 from dataclasses import dataclass
 
-from .choices import Priorities
+from .choices import Priorities, MessageType
 
 
 @dataclass
@@ -30,3 +30,4 @@ class Queues:
 @dataclass
 class Data:
     msg: str
+    msg_type: MessageType

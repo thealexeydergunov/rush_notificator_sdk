@@ -7,7 +7,7 @@ import logging
 import aiohttp
 from aiohttp.client_exceptions import ServerConnectionError
 
-from .choices import Priorities
+from .choices import Priorities, MessageType
 from .dataclasses import Settings, Queues, Data
 
 
@@ -37,9 +37,10 @@ class RushNotificatorSDK:
             asyncio.create_task(self.__task(priority=Priorities.low))
         self.kwgs = {'ssl': False} if aiohttp.__version__ >= '3.8.0' else {'verify_ssl': False}
 
-    async def __publish(self, msg: str) -> Tuple[dict, int]:
+    async def __publish(self, msg: str, msg_type: MessageType) -> Tuple[dict, int]:
         data = {
             "msg": msg,
+            "msg_type": msg_type
         }
 
         out = {}
@@ -56,7 +57,7 @@ class RushNotificatorSDK:
         while True:
             data: Data = await queue.get()
             try:
-                resp, status = await self.__publish(msg=data.msg)
+                resp, status = await self.__publish(msg=data.msg, msg_type=data.msg_type)
                 if status != 200:
                     logger.error(f"Problem send notification. Status {status}")
             except ServerConnectionError as e:
@@ -65,18 +66,18 @@ class RushNotificatorSDK:
             except Exception as e:
                 logger.exception(e)
 
-    async def publish_high(self, msg: str):
-        await self.queues.high.put(Data(msg=msg))
+    async def publish_high(self, msg: str, msg_type: MessageType):
+        await self.queues.high.put(Data(msg=msg, msg_type=msg_type))
 
-    async def publish_middle(self, msg: str):
-        await self.queues.middle.put(Data(msg=msg))
+    async def publish_middle(self, msg: str, msg_type: MessageType):
+        await self.queues.middle.put(Data(msg=msg, msg_type=msg_type))
 
-    async def publish_low(self, msg: str):
-        await self.queues.low.put(Data(msg=msg))
+    async def publish_low(self, msg: str, msg_type: MessageType):
+        await self.queues.low.put(Data(msg=msg, msg_type=msg_type))
 
-    async def publish_force(self, msg: str):
+    async def publish_force(self, msg: str, msg_type: MessageType):
         try:
-            resp, status = await self.__publish(msg=msg)
+            resp, status = await self.__publish(msg=msg, msg_type=msg_type)
         except ServerConnectionError as e:
             logger.exception(e)
             resp, status = {}, None
