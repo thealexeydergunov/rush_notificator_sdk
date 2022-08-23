@@ -66,16 +66,16 @@ class RushNotificatorSDK:
             except Exception as e:
                 logger.exception(e)
 
-    async def publish_high(self, msg: str, msg_type: MessageType):
+    async def publish_high(self, msg: str, msg_type: MessageType = MessageType.FEEDBACK):
         await self.queues.high.put(Data(msg=msg, msg_type=msg_type))
 
-    async def publish_middle(self, msg: str, msg_type: MessageType):
+    async def publish_middle(self, msg: str, msg_type: MessageType = MessageType.FEEDBACK):
         await self.queues.middle.put(Data(msg=msg, msg_type=msg_type))
 
-    async def publish_low(self, msg: str, msg_type: MessageType):
+    async def publish_low(self, msg: str, msg_type: MessageType = MessageType.FEEDBACK):
         await self.queues.low.put(Data(msg=msg, msg_type=msg_type))
 
-    async def publish_force(self, msg: str, msg_type: MessageType):
+    async def publish_force(self, msg: str, msg_type: MessageType = MessageType.FEEDBACK):
         try:
             resp, status = await self.__publish(msg=msg, msg_type=msg_type)
         except ServerConnectionError as e:
