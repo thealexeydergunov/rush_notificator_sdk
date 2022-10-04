@@ -60,6 +60,7 @@ class RushNotificatorSDK:
                 data: Data = await queue.get()
                 if not data:
                     logger.info(f'Task {name} done!')
+                    return
                 try:
                     resp, status = await self.__publish(aio_session=aio_session, msg=data.msg, msg_type=data.msg_type)
                     if status != 200:
