@@ -10,3 +10,4 @@ class Priorities(str, Enum):
 class MessageType(str, Enum):
     FEEDBACK = 'FEEDBACK'
     ISSUE = 'ISSUE'
+    CODE = 'CODE'
